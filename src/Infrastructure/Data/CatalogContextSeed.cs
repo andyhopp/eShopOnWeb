@@ -1,4 +1,4 @@
-﻿using Microsoft.eShopWeb.ApplicationCore.Entities;
+using Microsoft.eShopWeb.ApplicationCore.Entities;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -12,6 +12,7 @@ namespace Microsoft.eShopWeb.Infrastructure.Data
         public static async Task SeedAsync(CatalogContext catalogContext,
             ILoggerFactory loggerFactory, int? retry = 0)
         {
+            catalogContext.Database.EnsureCreated();
             int retryForAvailability = retry.Value;
             try
             {

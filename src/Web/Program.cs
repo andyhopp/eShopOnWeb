@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.eShopWeb.Infrastructure.Data;
 using Microsoft.eShopWeb.Infrastructure.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -41,6 +42,21 @@ namespace Microsoft.eShopWeb.Web
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration(builder => 
+                    builder.AddSystemsManager($"/{GetParameterPrefix()}")
+                )
                 .UseStartup<Startup>();
+
+        private static string GetParameterPrefix()
+        {
+            var client = new System.Net.WebClient();
+            string parameterPrefix;
+#if DEBUG
+            parameterPrefix = "eShopWeb";
+#else
+            parameterPrefix = System.Environment.GetEnvironmentVariable("DB_PARAMETER_PREFIX")
+#endif
+            return parameterPrefix;
+        }
     }
 }
