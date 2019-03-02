@@ -54,7 +54,7 @@ namespace Microsoft.eShopWeb.Web
 #if DEBUG
             parameterPrefix = "eShopWeb";
 #else
-            parameterPrefix = System.Environment.GetEnvironmentVariable("DB_PARAMETER_PREFIX")
+            parameterPrefix = System.Environment.GetEnvironmentVariable("DB_PARAMETER_PREFIX");
 #endif
             return parameterPrefix;
         }
