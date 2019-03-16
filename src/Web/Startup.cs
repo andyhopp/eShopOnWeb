@@ -213,7 +213,8 @@ namespace Microsoft.eShopWeb.Web
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            // We're going to disable HTTPS for this demo project
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
 

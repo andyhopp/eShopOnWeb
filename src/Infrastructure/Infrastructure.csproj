@@ -2,6 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
+		<RuntimeFrameworkVersion>2.2.2</RuntimeFrameworkVersion>
 		<RootNamespace>Microsoft.eShopWeb.Infrastructure</RootNamespace>
 	</PropertyGroup>
 

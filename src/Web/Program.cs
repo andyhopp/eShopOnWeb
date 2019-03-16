@@ -45,6 +45,7 @@ namespace Microsoft.eShopWeb.Web
                 .ConfigureAppConfiguration(builder => 
                     builder.AddSystemsManager($"/{GetParameterPrefix()}")
                 )
+                .UseUrls("http://*:80")
                 .UseStartup<Startup>();
 
         private static string GetParameterPrefix()
