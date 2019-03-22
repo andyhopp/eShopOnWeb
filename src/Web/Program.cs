@@ -24,8 +24,7 @@ namespace Microsoft.eShopWeb.Web
                 try
                 {
                     var catalogContext = services.GetRequiredService<CatalogContext>();
-                    CatalogContextSeed.SeedAsync(catalogContext, loggerFactory)
-            .Wait();
+                    CatalogContextSeed.SeedAsync(catalogContext, loggerFactory).Wait();
 
                     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
                     AppIdentityDbContextSeed.SeedAsync(userManager).Wait();
@@ -42,7 +41,7 @@ namespace Microsoft.eShopWeb.Web
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration(builder => 
+                .ConfigureAppConfiguration(builder =>
                     builder.AddSystemsManager($"/{GetParameterPrefix()}")
                 )
                 .UseUrls("http://*:80")
@@ -50,12 +49,14 @@ namespace Microsoft.eShopWeb.Web
 
         private static string GetParameterPrefix()
         {
+            var config = new ConfigurationBuilder().AddJsonFile("appSettings.json").Build();
+            var dbSettings = config.Get<DatabaseSettings>();
             var client = new System.Net.WebClient();
             string parameterPrefix;
 #if DEBUG
-            parameterPrefix = "eShopWeb";
+            parameterPrefix = $"cpu-workshop/{dbSettings.DatabaseEngine}";
 #else
-            parameterPrefix = System.Environment.GetEnvironmentVariable("DB_PARAMETER_PREFIX");
+            parameterPrefix = $"{System.Environment.GetEnvironmentVariable("DB_PARAMETER_PREFIX")}/{dbSettings.DatabaseEngine}";
 #endif
             return parameterPrefix;
         }

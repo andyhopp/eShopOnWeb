@@ -63,16 +63,25 @@ namespace Microsoft.eShopWeb.Web
 
         public void ConfigureProductionServices(IServiceCollection services)
         {
+            var dbSettings = Configuration.Get<DatabaseSettings>();
             // use real database
             // Requires LocalDB which can be installed with SQL Server Express 2016
             // https://www.microsoft.com/en-us/download/details.aspx?id=54284
             services.AddDbContext<CatalogContext>(c =>
-                c.UseMySql(Configuration.GetConnectionString("CatalogConnection")));
-
+            {
+                if (dbSettings.DatabaseEngine == "Aurora")
+                    c.UseMySql(Configuration.GetConnectionString("CatalogConnection"));
+                else
+                    c.UseSqlServer(Configuration.GetConnectionString("CatalogConnection"));
+            });
             // Add Identity DbContext
             services.AddDbContext<AppIdentityDbContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("IdentityConnection")));
-
+            {
+                if (dbSettings.DatabaseEngine == "Aurora")
+                    options.UseMySql(Configuration.GetConnectionString("IdentityConnection"));
+                else
+                    options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection"));
+            });
             ConfigureServices(services);
         }
 
