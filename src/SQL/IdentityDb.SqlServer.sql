@@ -1,3 +1,10 @@
+IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = N'Identity')
+  CREATE DATABASE [Identity]
+GO
+
+USE [Identity]
+GO
+
 IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
 BEGIN
     CREATE TABLE [__EFMigrationsHistory] (

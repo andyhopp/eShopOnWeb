@@ -1,3 +1,10 @@
+IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = N'CatalogDb')
+  CREATE DATABASE CatalogDb
+GO
+
+USE CatalogDb
+GO
+
 IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
 BEGIN
     CREATE TABLE [__EFMigrationsHistory] (
