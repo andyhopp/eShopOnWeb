@@ -1,0 +1,10 @@
+version: 0.0
+os: windows
+files:
+  - source: .\publish
+    destination: c:\eShopOnWeb
+hooks:
+  - ApplicationStop: ./scripts/StopService.ps1
+  - AfterInstall: ./scripts/RegisterService.ps1
+  - ApplicationStart: ./scripts/StartService.ps1
+  - ValidateService: ./scripts/SmokeTest.ps1

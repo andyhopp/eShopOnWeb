@@ -73,7 +73,10 @@ namespace Microsoft.eShopWeb.Infrastructure.Data
             builder.ToTable("Catalog");
 
             builder.Property(ci => ci.Id)
+                .ValueGeneratedOnAdd()
                 .IsRequired();
+
+            builder.HasKey(ci => ci.Id);
 
             builder.Property(ci => ci.Name)
                 .IsRequired(true)
@@ -101,6 +104,7 @@ namespace Microsoft.eShopWeb.Infrastructure.Data
             builder.HasKey(ci => ci.Id);
 
             builder.Property(ci => ci.Id)
+               .ValueGeneratedOnAdd()
                .IsRequired();
 
             builder.Property(cb => cb.Brand)
@@ -115,6 +119,7 @@ namespace Microsoft.eShopWeb.Infrastructure.Data
             builder.HasKey(ci => ci.Id);
 
             builder.Property(ci => ci.Id)
+               .ValueGeneratedOnAdd()
                .IsRequired();
 
             builder.Property(cb => cb.Type)
@@ -124,6 +129,13 @@ namespace Microsoft.eShopWeb.Infrastructure.Data
 
         private void ConfigureOrder(EntityTypeBuilder<Order> builder)
         {
+            builder.ToTable("Order");
+            builder.HasKey(ci => ci.Id);
+
+            builder.Property(ci => ci.Id)
+               .ValueGeneratedOnAdd()
+               .IsRequired();
+
             var navigation = builder.Metadata.FindNavigation(nameof(Order.OrderItems));
 
             navigation.SetPropertyAccessMode(PropertyAccessMode.Field);
@@ -133,6 +145,13 @@ namespace Microsoft.eShopWeb.Infrastructure.Data
 
         private void ConfigureOrderItem(EntityTypeBuilder<OrderItem> builder)
         {
+            builder.ToTable("OrderItem");
+            builder.HasKey(ci => ci.Id);
+
+            builder.Property(ci => ci.Id)
+               .ValueGeneratedOnAdd()
+               .IsRequired();
+
             builder.OwnsOne(i => i.ItemOrdered);
         }
     }

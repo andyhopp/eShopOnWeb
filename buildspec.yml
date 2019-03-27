@@ -23,18 +23,15 @@ phases:
             PATH="~/.dotnet/tools/:$PATH"
           fi
         fi
-  #pre_build:
-    #commands:
-      # - command
-      # - command
   build:
     commands:
       - echo $PATH
       - echo "Building with dotnet SDK Version $(dotnet --version)"
       - echo "Building for runtime '$TARGET_RUNTIME'"
       - dotnet publish -c Release -r $TARGET_RUNTIME
-      - mkdir build
-      - cp -r src/Web/bin/Release/netcoreapp2.2/$TARGET_RUNTIME/publish/* build/
+      - mkdir -p build/publish
+      - cp -r src/Web/bin/Release/netcoreapp2.2/$TARGET_RUNTIME/publish/* build/publish/
+      - cp -r src/codedeploy/$TARGET_RUNTIME/* build/
 artifacts:
   files: [ '**/*' ]
   name: PublishedBinaries

@@ -1,0 +1,16 @@
+version: 0.0
+os: linux
+files:
+  - source: .\publish
+    destination: /opt/eShopOnWeb
+permissions:
+  - object: /opt/eShopOnWeb
+    owner: ec2-user
+    mode: 444
+    type:
+      - folder
+hooks:
+  - ApplicationStop: ./scripts/stopDaemon.sh
+  - AfterInstall: ./scripts/registerDaemon.sh
+  - ApplicationStart: ./scripts/startDaemon.sh
+  - ValidateService: ./scripts/smokeTest.sh
