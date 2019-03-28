@@ -4,7 +4,7 @@ env:
   variables:
      DOTNET_SDK_VERSION: "2.2.102"
   parameter-store:
-     TARGET_RUNTIME: "/cpu-workshop/platform-architecture"
+     TARGET_RUNTIME: "$ARCHITECTURE_PARAMETER"
 
 phases:
   install:
@@ -32,6 +32,8 @@ phases:
       - mkdir -p build/publish
       - cp -r src/Web/bin/Release/netcoreapp2.2/$TARGET_RUNTIME/publish/* build/publish/
       - cp -r src/codedeploy/$TARGET_RUNTIME/* build/
+      #- DEPLOYMENT_SUFFIX=$(echo $TARGET_RUNTIME | awk '{split($0, a, "-"); print a[2]}')
+      #- aws deploy create-deployment --application-name CPU-Workshop-App --deployment-group-name "cpu-workshop-deployment-group-$DEPLOYMENT_SUFFIX" --revision revisionType=S3,s3Location={bucket=,key=}
 artifacts:
   files: [ '**/*' ]
   name: PublishedBinaries
