@@ -4,7 +4,15 @@ files:
   - source: .\publish
     destination: c:\eShopOnWeb
 hooks:
-  - ApplicationStop: ./scripts/StopService.ps1
-  - AfterInstall: ./scripts/RegisterService.ps1
-  - ApplicationStart: ./scripts/StartService.ps1
-  - ValidateService: ./scripts/SmokeTest.ps1
+  ApplicationStop: 
+    - location: ./scripts/StopService.ps1
+      timeout: 60
+  AfterInstall: 
+    - location: ./scripts/RegisterService.ps1
+      timeout: 120
+  ApplicationStart: 
+    - location: ./scripts/StartService.ps1
+      timeout: 60
+  ValidateService: 
+    - location: ./scripts/SmokeTest.ps1
+      timeout: 60

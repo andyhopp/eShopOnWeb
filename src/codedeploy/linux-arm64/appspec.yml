@@ -10,7 +10,15 @@ permissions:
     type:
       - folder
 hooks:
-  - ApplicationStop: ./scripts/stopDaemon.sh
-  - AfterInstall: ./scripts/registerDaemon.sh
-  - ApplicationStart: ./scripts/startDaemon.sh
-  - ValidateService: ./scripts/smokeTest.sh
+  ApplicationStop: 
+    - location: ./scripts/stopDaemon.sh
+      timeout: 60
+  AfterInstall: 
+    - location: ./scripts/registerDaemon.sh
+      timeout: 120
+  ApplicationStart: 
+    - location: ./scripts/startDaemon.sh
+      timeout: 60
+  ValidateService: 
+    - location: ./scripts/smokeTest.sh
+      timeout: 60
