@@ -32,8 +32,13 @@ phases:
       - mkdir -p build/publish
       - cp -r src/Web/bin/Release/netcoreapp2.2/$TARGET_RUNTIME/publish/* build/publish/
       - cp -r src/codedeploy/$TARGET_RUNTIME/* build/
-      #- DEPLOYMENT_SUFFIX=$(echo $TARGET_RUNTIME | awk '{split($0, a, "-"); print a[2]}')
-      #- aws deploy create-deployment --application-name CPU-Workshop-App --deployment-group-name "cpu-workshop-deployment-group-$DEPLOYMENT_SUFFIX" --revision revisionType=S3,s3Location={bucket=,key=}
+      - PACKAGE_NAME=$CODEBUILD_BUILD_ID.zip
+      - cd build
+      - zip -r $PACKAGE_NAME *
+      - cd ..
+      - DEPLOYMENT_SUFFIX=$(echo $TARGET_RUNTIME | awk '{split($0, a, "-"); print a[2]}')
+      - aws s3 cp build/$PACKAGE_NAME s3://$ARTIFACT_BUCKET/PublishedBinaries/$PACKAGE_NAME
+      - aws deploy create-deployment --application-name $APPLICATION_NAME --deployment-group-name "cpu-workshop-deployment-group-$DEPLOYMENT_SUFFIX" --revision revisionType=S3,s3Location={bucket=$ARTIFACT_BUCKET,key=PublishedBinaries/$PACKAGE_NAME,bundleType=zip}
 artifacts:
   files: [ '**/*' ]
   name: PublishedBinaries

@@ -1,3 +1,5 @@
+﻿using DasMulli.AspNetCore.Hosting.WindowsServices;
+using DasMulli.Win32.ServiceUtils;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -7,12 +9,50 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Linq;
 
 namespace Microsoft.eShopWeb.Web
 {
     public class Program
     {
+        private const string RunAsServiceFlag = "--service";
+
         public static void Main(string[] args)
+        {
+            try
+            {
+                if (args.Contains(RunAsServiceFlag))
+                {
+                    args = args.Where(a => a != RunAsServiceFlag).ToArray();
+                    RunAsService(args);
+                }
+                else
+                {
+                    RunInteractive(args);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+
+        private static void RunInteractive(String[] args)
+        {
+            IWebHost host = BuildWebHost(args);
+
+            host.Run();
+        }
+
+        private static void RunAsService(String[] args)
+        {
+            IWebHost host = BuildWebHost(args);
+
+            host.RunAsService();
+        }
+
+        private static IWebHost BuildWebHost(string[] args)
         {
             var host = CreateWebHostBuilder(args)
                         .Build();
@@ -36,7 +76,7 @@ namespace Microsoft.eShopWeb.Web
                 }
             }
 
-            host.Run();
+            return host;
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
