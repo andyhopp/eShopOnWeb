@@ -47,6 +47,11 @@ namespace Microsoft.eShopWeb.Web
 
         private static void RunAsService(String[] args)
         {
+            var assemblyLocationFolder = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            if (string.Compare(Environment.CurrentDirectory, assemblyLocationFolder, StringComparison.OrdinalIgnoreCase) != 0)
+            {
+                Environment.CurrentDirectory = assemblyLocationFolder;
+            }
             IWebHost host = BuildWebHost(args);
 
             host.RunAsService();
