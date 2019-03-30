@@ -20,4 +20,4 @@ EOF
 
 systemctl daemon-reload  
 systemctl enable eshop.service  
-systemctl status eshop.service  
+
