@@ -7,7 +7,7 @@ cat > eshop.service <<EOF
 Description=eShop Demo App 
   
 [Service]  
-ExecStart=/opt/eShopOnWeb/Web.exe
+ExecStart=/opt/eShopOnWeb/Web
 WorkingDirectory=/opt/eShopOnWeb/  
 Restart=on-failure  
 SyslogIdentifier=eshop-demo-app  

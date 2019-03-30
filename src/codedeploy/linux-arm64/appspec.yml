@@ -1,14 +1,21 @@
 version: 0.0
 os: linux
 files:
-  - source: .\publish
+  - source: ./publish
     destination: /opt/eShopOnWeb
 permissions:
   - object: /opt/eShopOnWeb
-    owner: ec2-user
-    mode: 444
+    pattern: "**"
+    owner: ubuntu
+    mode: 555
     type:
-      - folder
+      - file
+  - object: /opt/eShopOnWeb
+    pattern: "**"
+    owner: ubuntu
+    mode: 555
+    type:
+      - directory
 hooks:
   ApplicationStop: 
     - location: ./scripts/stopDaemon.sh
