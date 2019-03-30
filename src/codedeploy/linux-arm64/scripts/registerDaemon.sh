@@ -8,6 +8,7 @@ Description=eShop Demo App
   
 [Service]  
 ExecStart=/opt/eShopOnWeb/Web
+EnvironmentFile=/etc/environment
 WorkingDirectory=/opt/eShopOnWeb/  
 Restart=on-failure  
 SyslogIdentifier=eshop-demo-app  
