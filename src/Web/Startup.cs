@@ -70,9 +70,13 @@ namespace Microsoft.eShopWeb.Web
             services.AddDbContext<CatalogContext>(c =>
             {
                 if (dbSettings.DatabaseEngine == "Aurora")
+                {
                     c.UseMySql(Configuration.GetConnectionString("CatalogConnection"));
+                }
                 else
+                {
                     c.UseSqlServer(Configuration.GetConnectionString("CatalogConnection"));
+                }
             });
             // Add Identity DbContext
             services.AddDbContext<AppIdentityDbContext>(options =>

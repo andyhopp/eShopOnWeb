@@ -16,11 +16,17 @@ namespace Microsoft.eShopWeb.Web
     public class Program
     {
         private const string RunAsServiceFlag = "--service";
+        private static string _databaseEngine;
+        public static string DatabaseEngine => _databaseEngine;
 
         public static void Main(string[] args)
         {
             try
             {
+                var config = new ConfigurationBuilder().AddJsonFile("appSettings.json").Build();
+                var dbSettings = config.Get<DatabaseSettings>();
+                _databaseEngine = dbSettings.DatabaseEngine;
+
                 if (args.Contains(RunAsServiceFlag))
                 {
                     args = args.Where(a => a != RunAsServiceFlag).ToArray();
@@ -37,7 +43,7 @@ namespace Microsoft.eShopWeb.Web
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
-
+        
         private static void RunInteractive(String[] args)
         {
             IWebHost host = BuildWebHost(args);
@@ -87,21 +93,21 @@ namespace Microsoft.eShopWeb.Web
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration(builder =>
-                    builder.AddSystemsManager($"/{GetParameterPrefix()}")
+                    builder.AddJsonFile("appSettings.json")
+                           .AddSystemsManager($"/{GetParameterPrefix()}")
                 )
                 .UseUrls("http://*:80")
                 .UseStartup<Startup>();
 
         private static string GetParameterPrefix()
         {
-            var config = new ConfigurationBuilder().AddJsonFile("appSettings.json").Build();
-            var dbSettings = config.Get<DatabaseSettings>();
-            var client = new System.Net.WebClient();
             string parameterPrefix;
+            Console.WriteLine($"Using database engine: {Program.DatabaseEngine}");
+
 #if DEBUG
-            parameterPrefix = $"cpu-workshop/{dbSettings.DatabaseEngine}";
+            parameterPrefix = $"cpu-workshop/{Program.DatabaseEngine}";
 #else
-            parameterPrefix = $"{System.Environment.GetEnvironmentVariable("DB_PARAMETER_PREFIX")}/{dbSettings.DatabaseEngine}";
+            parameterPrefix = $"{System.Environment.GetEnvironmentVariable("DB_PARAMETER_PREFIX")}/{Program.DatabaseEngine}";
 #endif
             return parameterPrefix;
         }
