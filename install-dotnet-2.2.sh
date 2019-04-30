@@ -10,7 +10,5 @@ mkdir -p $HOME/dotnet
 tar zxf dotnet-2.2.sdk.tgz -C $HOME/dotnet
 # Add dotnet SDK to the profile path
 echo $'###+DOTNET2.2\nexport PATH=$HOME/dotnet:$PATH\n###-DOTNET2.2\n' >> ~/.bash_profile
-# Reload the profile so the current session can find dotnet
-. ~/.bash_profile
 # Clean up after ourselves!
 rm dotnet-2.2.sdk.tgz
