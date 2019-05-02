@@ -1,4 +1,4 @@
-Hello and welcome to this workshop!
+# Hello and welcome to this workshop!
 
 ## Prerequisites:
   - A laptop computer running Windows, OSX, or Linux
