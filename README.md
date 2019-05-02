@@ -224,7 +224,7 @@ Run the following commands (you may have to right-click to paste them in Powersh
 
 ```
 cd Downloads
-curl https://s3.amazonaws.com/us-east-1.andyhoppatamazon.com/cloudformation/cpu-workshop/Drop-dbo-suffix.json
+curl https://s3.amazonaws.com/us-east-1.andyhoppatamazon.com/cloudformation/cpu-workshop/Drop-dbo-suffix.json -OutFile Drop-dbo-suffix.json
 ```
 In SCT, Click the `Settings` menu, then `Mapping Rules`
 
