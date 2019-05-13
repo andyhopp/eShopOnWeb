@@ -1,11 +1,9 @@
-Hello and welcome to this workshop!
+# Welcome to the A1 Instance Workshop!
 
-## Prerequisites:
-  - A laptop computer running Windows, OSX, or Linux
+## Prerequisites: <a name="prerequisites"></a>
+  - A 12-digit code (aka "hash") provided to you by the workshop instructor.
   
-  - An AWS Account with Administrator or AdminAccess privileges. We will provide Workshop Credits to apply to your account that will offset the charges incurred in the normal course of the workshop. 
-
-  **IMPORTANT: At the end of the workshop, please follow the clean-up instructions to delete all of the resources created during the workshop, or else you will be charged significantly more than Workshop Credits will cover!**
+  - A laptop computer running Windows, OSX, or Linux
 
   - A Remote Desktop Services client.
     - If you are running Windows, you will already have one installed.
@@ -14,46 +12,50 @@ Hello and welcome to this workshop!
     (or navigate to
     <https://itunes.apple.com/us/app/microsoft-remote-desktop-10/id1295203466>).
     - If you are running a Linux distribution, you may need to install a client using your Linux distribution's package manager.
-  
-  - The .pem file for an EC2 keypair that will be used for connecting to your EC2 instances. If you do not have a keypair already created, or you cannot find the .pem file, you can follow the instructions for creating one here: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html (under the section entitled _"Creating a Key Pair"_)
 
-We will explore how to create and run a standard 3-tier Web App on both x86 and Arm processors. 
+# Instructions
+For this workshop, we have provided a temporary AWS account that you will use to explore how you can migrate an existing ASP.NET Core Web Application from Windows running on x86_64 EC2 instances against a SQL Server database, to Linux running on the new Graviton ARM64 instances against an Amazon Aurora database.
 
-## Instructions
+## Connecting to your team dashboard
+Let's get started! Login to the team dashboard at the following URL:
+    https://dashboard.eventengine.run/login
 
-### Create the AWS Environment
+You will be prompted to enter a 12-character hash code for your team; this will be on the card provided to you at the beginning of the workshop.
 
-This section walks you through the creating the workshop environment using [AWS Cloud9](https://aws.awazon.com/cloud9).
+Once you enter your hash code and click Proceed, you will be presented with your team dashboard. Click the "AWS Console" button to navigate to the credentials page for your account.
 
-This workshop provides you with a complete CI/CD pipeline including a cloud-based integrated development environment (IDE) that will let you write, run, and test workloads using just a web browser.
+![](https://s3.amazonaws.com/andyhopp-content/Conferences/2019/DotNetSouth/Launch+the+AWS+Console.png)
 
-1. We can create our development and test environments via CloudFormation.
-This CloudFormation template will create a Cloud9 IDE, as well as configure the AWS environment for the rest of the workshop. Click the below _"Deploy to AWS"_ button to create this stack.
+## Logging into the AWS Console
+You will see a section entitled "login link" with a button labeled "Open Console." Click this button to open your account's console.
 
-| Region | Launch template with a new VPC | 
-| -------| ------- |
-| **N. Virginia** (us-east-1) | [Deploy to AWS](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=cpu-workshop&templateURL=https://s3.amazonaws.com/us-east-1.andyhoppatamazon.com/cloudformation/cpu-workshop/master-template.yaml) |
+![](https://s3.amazonaws.com/andyhopp-content/Images/Open+Console.png)
 
-1. Click the `Next` button to open the `Specify stack details` screen. The name will already be populated with "cpu-workshop," and should not be changed.
-1. Choose a keypair for the Schema Conversion Tool (SCT) Instance. We will use this key to connect to the SCT EC2 instance later in this workshop.
-1. Click the `Next` button.
-1. On the "Configure stack options" screen, accept the default values by clicking the `Next` button again.
-1. On the "Review `<stack name>`" view, scroll to the bottom and check the following checkboxes in the "Capabilities and transforms" section:
-   
-    * I acknowledge that AWS CloudFormation might create IAM resources.
-    * I acknowledge that AWS CloudFormation might create IAM resources with custom names.
-    * I acknowledge that AWS CloudFormation might require the following capability: CAPABILITY_AUTO_EXPAND
-1. Click the "Create Stack" button to launch the stack. This process should take approximately 15 minutes. You can check the progress of the launch process by clicking your stack's name and choosing the `Events` tab.
+This will bring you to the AWS Console for your temporary account. Take a moment to familiarize yourself with this page; from here, you can navigate to one of the over 165 services AWS offers.
 
-When all the stacks show _CREATE COMPLETE_, click on the 'Outputs' tab in the Cloudformation UI to get the URL for the Cloud9 IDE.
+<div style="text-align:center;border:thin solid red;background-color:lightgray;color:black">
+NOTE: For the purposes of this workshop, we have purposefully limited access to only the services needed. You may encounter error messages if you navigate to services other than those used for this workshop.
+</div>
 
-Take a few minutes to familiarize yourself with the Cloud9 interface.
+![](https://s3.amazonaws.com/andyhopp-content/Images/AWS+Console.png)
 
-Most of the commands will be run in the 'Terminal' window, while most of the file editing will be done in the frame above.
+## Opening the CloudFormation dashboard
+We are using the CloudFormation service to automatically provision the AWS resources that you will be using for this workshop. CloudFormation allows you to create documents known as `Templates` which describe the AWS resources you would like to provision, along with any configuration data for those resources. When you supply a template to CloudFormation, it will create a `Stack` that contains the resources. We will be using CloudFormation again later on in this workshop, but for now, let's examine the stack we created for you.
+
+In the "Find Services" search bar, enter "CloudFormation" and click the link that appears below the search bar.
+
+![](https://s3.amazonaws.com/andyhopp-content/Images/Search+for+Cloudformation.png)
+
+This will bring you to the CloudFormation dashboard.
+
+## Viewing the outputs of our stack
+There will be multiple stacks listed in CloudFormation, but only one named "module-XXXXXXX" (Note: this is simply the name generated by our workshop's provisioning tool; you can provide the name for a stack when you create your own). To the right of the stack, you will see a tabbed details view. The tabs contain information regarding the stack, the events that occurred during the stack's lifecyle, the resources that were created by the stack, and any outputs that the stack returns. In our case, we're interested in the outputs, so click the `Outputs` tab.
+
+![](https://s3.amazonaws.com/andyhopp-content/Images/Outputs+tab.png)
 
 ### Set up Workshop Prerequisites
 
-In the Cloud9 'Terminal' window, run the following commands:
+One of the output parameters in this list will contain the URL for our Cloud9 IDE (Cloud9Url). Click this link to open the IDE. It will take a moment to load and initialize your environment. In the Cloud9 'Terminal' window on the lower-right, run the following commands:
 
 ```
 cd /home/ec2-user/environment/workshop/
@@ -70,15 +72,9 @@ source ~/.bash_profile
 
 ### Viewing our Windows-based Web Application
 
-After our CloudFormation stack has launched, the latest version of our code will be deployed. 
+The initial version is built for the Windows operating system running on Intel x86_64 processors using SQL Server as the database engine. Let's connect to the Web application using the URL for the load balancer created by the stack. 
 
-The initial version is built for the Windows operating system running on Intel x86_64 processors using SQL Server as the database engine. 
-
-Let's connect to the Web application using the URL for the load balancer created by the stack. 
-
-You can find the URL to use by navigating to the details for our `cpu-workshop` CloudFormation stack and clicking the `Outputs` tab. 
-
-The name of the output parameter containing the URL is `AlbUrlForx86`, and we can access the site by clicking the hyperlink.
+Navigate back to the CloudFormation Outputs tab. The name of the output parameter containing the URL is `AlbUrlForx86`, and we can access the site by clicking the hyperlink.
 
 If you scroll to the bottom of the home page, you will see a line that indicates the CPU architecture _(currently x64)_ and database engine _(currently SQL Server)_.
 
@@ -119,7 +115,7 @@ This parameter will use a name that is prefixed with our CloudFormation stack na
 
    1. Start a new build.
 
-        1. Navigate to the CloudFormaton stack's Outputs tab, and click the hyperlink next to the `CodePipelineUrl` output parameter.
+        1. Navigate back to the CloudFormation stack's Outputs tab, and click the hyperlink next to the `CodePipelineUrl` output parameter.
 
         1. On the CodePipeline's dashboard, click the `Release Change` button to start a new build, and confirm your decision by clicking the `Release` button on the pop-up dialog that appears.  
 
@@ -128,7 +124,7 @@ This parameter will use a name that is prefixed with our CloudFormation stack na
     1. Check on the deployment process.
         
         The build process takes roughly 5 minutes to complete. After the build completes, a CodeDeploy deployment is started on our Arm instances. You can view the progress of this deployment by navigating to the CodeDeploy console by opening the CloudFormation stack's `Outputs` tab and clicking the URL for the `CodeDeployApplcationUrl` output parameter.
-        You'll see the deployment group ending in "-amr64" change to `SUCCEEDED` when it's finished. 
+        You'll see the deployment group ending in "-arm64" change to `SUCCEEDED` when it's finished. 
 
     1. View the application running on Arm:
 
@@ -143,19 +139,35 @@ Next, we'll migrate off of SQL Server onto Amazon Aurora.
 ### Changing our Database Engine to Aurora
 
 #### Remote into the AWS SCT Instance
-First, We'll use the Schema Conversion Tool to convert our SQL Server schema into Aurora.
+Next, we'll use the Schema Conversion Tool to convert our SQL Server schema into Aurora.
 
-In the CloudFormation `Outputs` tab, locate the `SchemaConversionToolInstanceUrl` output parameter and open that link in a new browser tab.
+Navigate back to the CloudFormation Outputs tab. There will be an output parameter named "" that contains the name of a Systems Manager parameter that contains the random password that was generated for our Visual Studio instance. Systems Manager is an AWS Service that allows you to manage, patch, and store configuration parameters for EC2 instances and other AWS resources. In this case, we're using the `Parameter Store` feature to store the generated password.
 
-You should see the AWS EC2 Console.  Click the Connect button at the top of the instance lists.
+## View our Systems Manager parameter
 
-Using the .pem file you indicated in the initial CloudFormation template launch, retrieve the Administrator Password for the SCT Instance, and copy it to your clipboard.
+<div style="text-align:center;border:thin solid red;background-color:lightgray;color:black">
+NOTE: For the purposes of this workshop, we are storing the password as plaintext. This is NOT considered to be a best practice; in a production environment, you would either store this as an encrypted ("secure") string with restricted permissions for decryption, use an RSA keypair, or join the machine to an Active Directory domain.
+</div>
 
-You can use the "Download Remote Desktop File" button to automatically download a RDP profile for the SCT Instance.
+Let's open the Systems Manager console to retrieve our password. Click the "Services" drop-down on the upper-left of your AWS Console. This will open a search pane. In the search box, enter "systems manager" and click the Systems Manager entry in the results. 
+<div style="text-align:center;border:thin solid green">
+Pro tip: we will be returning to the CloudFormation Outputs tab in a moment; if you hold the Control key (Windows) or the Command key (Mac), you will open Systems Manager in a new tab so we don't lose our place.
+</div>
 
-When prompted, paste in the password.
+![](https://s3.amazonaws.com/andyhopp-content/Images/Search+for+Systems+Manager.png)
 
-You are now remoted into a Windows instance in which we'll run the Schema Conversion Tool
+This will open the Systems Manager dashboard. In the left-hand pane, select "Parameter Store" to navigate to the parameters (you may need to scroll down).
+
+![](https://s3.amazonaws.com/andyhopp-content/Images/Select+Parameter+Store.png)
+
+with a name ending in "SCTPassword". Click the parameter to view it, and copy the password to a temporary file for future reference.
+
+![View the parameter details](https://s3.amazonaws.com/andyhopp-content/Images/Click+on+Parameter.png)
+
+![Copy the password](https://s3.amazonaws.com/andyhopp-content/Images/Copy+password.png)
+
+## Connecting to our EC2 instance
+Now it's time to connect to the EC2 instance. We have provisioned an EC2 instance running Windows Server 2019 for this workshop, and we have installed Visual Studio 2019 Community edition for you. Let's return to the CloudFormation Outputs tab for our stack by either returning to that browser tab or by searching for CloudFormation service from the Services drop-down and clicking the Outputs tab again. Copy the value for the `SchemaConversionToolInstanceName` parameter; this is the DNS name for the EC2 instance. Use your Remote Desktop Services client (see [Prerequisites](#prerequisites) above) to connect to this instance at this address. The username for the instance will be "Administrator" and the password will be the value copied from the Systems Manager parameter above.
 
 #### Install JDBC Drivers
 
@@ -163,9 +175,7 @@ Unfortunately for legal reasons we are not allowed to pre-install the drivers fo
 
 You will need to install both SQL Server and MySQL drivers in order to connect to your source and target databases. 
 
-Instructions are on the desktop in the file "JDBC Driver Install Instructions"
-
-Follow the instructions and install the appropriate drivers you need.
+Instructions are on the desktop in the file "JDBC Driver Install Instructions." Follow these instructions to download and install the drivers.
 
 #### Launch the Schema Conversion Tool and Connect to the Databases
 
@@ -189,7 +199,7 @@ Click "Next" and enter the following...
  Instance Name: [Leave Blank]
  User Name: awsadmin
  Password: Reind33rFl0tilla 
- Microsoft SQL Server driver path: C:\JDBC Drivers\SQLServer\mssql-jdbc-7.0.0.jre8.jar
+ Microsoft SQL Server driver path: C:\JDBC Drivers\Microsoft JDBC Driver 7.0 for SQL Server\sqljdbc_7.0\enu\mssql-jdbc-7.0.0.jre8.jar
 ```
 Click "Test connection" _(in the lower left corner of the dialog)_
 
@@ -207,7 +217,7 @@ Pull down the `Target Database Engine:` selector to `Amazon Aurora (MySQL Compat
  Port: 3306 
  User Name: awsadmin
  Password: Reind33rFl0tilla 
- MySQL driver path: C:\JDBC Drivers\MySQL\mysql-connector-java-8.0.13.jar
+ MySQL driver path: C:\JDBC Drivers\MySQL\mysql-connector-java-8.XX.XX.jar (the X-es will be replaced with version numbers)
 ```
 
 Click "Test connection" _(in the lower left corner of the dialog)_
@@ -218,17 +228,17 @@ _(Ignore any warnings about SQL version recommendations, if one appears.)_
 
 #### Import the Transform Rules
 
-Launch Powershell from the Taskbar of the Windows instance.
+Launch PowerShell from the Taskbar of the Windows instance.
 
-Run the following commands (you may have to right-click to paste them in Powershell):
+Run the following commands (you may have to right-click to paste them in PowerShell):
 
 ```
 cd Downloads
-curl https://s3.amazonaws.com/us-east-1.andyhoppatamazon.com/cloudformation/cpu-workshop/Drop-dbo-suffix.json
+curl https://s3.amazonaws.com/us-east-1.andyhoppatamazon.com/cloudformation/cpu-workshop/Drop-dbo-suffix.json -OutFile ~\Downloads\Drop-dbo-suffix.json
 ```
 In SCT, Click the `Settings` menu, then `Mapping Rules`
 
-Click `"Import script into SCT"` and navigate to JSON file in your Downloads folder.
+Click `"Import script into SCT"` and navigate to the `Drop-dbo-suffix.json` file in your Downloads folder.
 
 Click `"Save to All"` and then `"Close"`
 
@@ -287,7 +297,7 @@ Lastly, locate once again the `AlbUrlForArm64` output parameter in the CloudForm
 Launch that URL and scroll to the bottom.
 You should see:
 ```
-CPU Architecure: Arm64  Database Engine: Aurora
+CPU Architecture: Arm64  Database Engine: Aurora
 ```
 
 **We've successfully migrated a .NET Core application from Windows/x86/SQL Server to Linux/Arm/Aurora !**
