@@ -1,0 +1,31 @@
+version: 0.0
+os: linux
+files:
+  - source: ./publish
+    destination: /opt/eShopOnWeb
+permissions:
+  - object: /opt/eShopOnWeb
+    pattern: "**"
+    owner: ec2-user
+    mode: 555
+    type:
+      - file
+  - object: /opt/eShopOnWeb
+    pattern: "**"
+    owner: ec2-user
+    mode: 555
+    type:
+      - directory
+hooks:
+  ApplicationStop: 
+    - location: ./scripts/stopDaemon.sh
+      timeout: 60
+  AfterInstall: 
+    - location: ./scripts/registerDaemon.sh
+      timeout: 120
+  ApplicationStart: 
+    - location: ./scripts/startDaemon.sh
+      timeout: 60
+  ValidateService: 
+    - location: ./scripts/smokeTest.sh
+      timeout: 60
