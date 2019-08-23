@@ -95,7 +95,7 @@ namespace Microsoft.eShopWeb.Web
                 .ConfigureAppConfiguration(builder =>
                     builder.AddJsonFile("appSettings.json")
                 )
-                .UseUrls("http://*:80")
+                .UseUrls("http://*:3000")
                 .UseStartup<Startup>();
 
     }
