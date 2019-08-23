@@ -94,22 +94,9 @@ namespace Microsoft.eShopWeb.Web
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration(builder =>
                     builder.AddJsonFile("appSettings.json")
-                           .AddSystemsManager($"/{GetParameterPrefix()}")
                 )
                 .UseUrls("http://*:80")
                 .UseStartup<Startup>();
 
-        private static string GetParameterPrefix()
-        {
-            string parameterPrefix;
-            Console.WriteLine($"Using database engine: {Program.DatabaseEngine}");
-
-#if DEBUG
-            parameterPrefix = $"cpu-workshop/{Program.DatabaseEngine}";
-#else
-            parameterPrefix = $"{System.Environment.GetEnvironmentVariable("DB_PARAMETER_PREFIX")}/{Program.DatabaseEngine}";
-#endif
-            return parameterPrefix;
-        }
     }
 }

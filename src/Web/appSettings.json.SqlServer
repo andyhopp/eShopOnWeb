@@ -1,0 +1,17 @@
+{
+  "DatabaseEngine": "SQLServer",
+  "ConnectionStrings": {
+    "CatalogConnection": "Server=cmp207-sqlserver.cym2zbbhngsn.us-east-1.rds.amazonaws.com;Initial Catalog=CatalogDb;User ID=awsadmin;Password=Reind33rFl0tilla",
+    "IdentityConnection": "Server=cmp207-sqlserver.cym2zbbhngsn.us-east-1.rds.amazonaws.com;Initial Catalog=Identity;User ID=awsadmin;Password=Reind33rFl0tilla"
+  },
+  "CatalogBaseUrl": "",
+  "Logging": {
+    "IncludeScopes": false,
+    "LogLevel": {
+      "Default": "Warning",
+      "Microsoft": "Warning",
+      "System": "Warning"
+    },
+    "AllowedHosts": "*"
+  }
+}
